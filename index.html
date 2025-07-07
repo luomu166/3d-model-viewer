@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D模型展示器 - Three.js高级版</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 600px;
+            width: 90%;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 2.5em;
+        }
+        .description {
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .features {
+            margin-top: 30px;
+            text-align: left;
+        }
+        .features h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        .features ul {
+            color: #666;
+            line-height: 1.8;
+        }
+        .features li {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎨 3D模型展示器</h1>
+        <p class="description">
+            基于Three.js的高级3D模型展示器，支持GLB格式模型加载，
+            提供丰富的交互功能和视觉效果。
+        </p>
+        
+        <a href="model-viewer-three-advanced.html" class="btn">🚀 启动3D展示器</a>
+        
+        <div class="features">
+            <h3>✨ 主要功能</h3>
+            <ul>
+                <li><strong>模型加载</strong> - 支持GLB/GLTF格式3D模型</li>
+                <li><strong>交互控制</strong> - 鼠标拖拽旋转、滚轮缩放、右键平移</li>
+                <li><strong>视角重置</strong> - 一键恢复初始视角</li>
+                <li><strong>线框模式</strong> - 切换线框显示模式</li>
+                <li><strong>动画控制</strong> - 播放/暂停模型动画</li>
+                <li><strong>背景切换</strong> - 多种预设背景效果</li>
+                <li><strong>环境光照</strong> - 优化的光照系统</li>
+                <li><strong>加载进度</strong> - 实时显示加载状态</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html> 
