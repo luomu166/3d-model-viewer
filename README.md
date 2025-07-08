@@ -30,7 +30,7 @@
 
 3. **访问地址**
    ```
-   https://你的用户名.github.io/3d-model-viewer/
+   https://luomu166.github.io/3d-model-viewer/
    ```
 
 ### 方法2: Netlify (拖拽部署)

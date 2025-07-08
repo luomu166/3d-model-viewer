@@ -66,7 +66,13 @@
     </style>
 </head>
 <body>
-    <div id="loading">正在加载模型...</div>
+    <div id="loading" style="text-align: center;">
+        <div>正在加载模型...</div>
+        <div id="loading-progress" style="margin-top: 10px; font-size: 14px; color: #ccc;"></div>
+        <div id="loading-tips" style="margin-top: 20px; font-size: 12px; color: #888; max-width: 300px;">
+            移动端用户：首次加载可能需要较长时间，请耐心等待
+        </div>
+    </div>
     <div id="info">
         <strong>Three.js 高级版</strong><br>
         鼠标左键：旋转 | 滚轮：缩放 | 右键：平移
@@ -76,6 +82,93 @@
         <button class="control-btn" onclick="viewer.toggleWireframe()">线框模式</button>
         <button class="control-btn" onclick="viewer.toggleAnimation()">动画开关</button>
         <button class="control-btn" onclick="viewer.changeBackground()">切换背景</button>
+        <button class="control-btn" onclick="viewer.toggleLightControls()">灯光控制</button>
+    </div>
+    
+    <!-- 灯光控制面板 -->
+    <div id="light-controls" style="display: none; position: fixed; top: 80px; right: 20px; color: white; font-family: Arial, sans-serif; font-size: 12px; background: rgba(0,0,0,0.8); padding: 15px; border-radius: 5px; z-index: 1000; min-width: 200px;">
+        <h4 style="margin: 0 0 10px 0;">灯光控制</h4>
+        
+        <!-- 位置控制 -->
+        <div style="border-bottom: 1px solid #444; padding-bottom: 10px; margin-bottom: 10px;">
+            <h5 style="margin: 0 0 8px 0; color: #ccc;">位置控制</h5>
+            <div style="margin-bottom: 8px;">
+                <label>主方向光 X: <input type="range" id="dirLightX" min="-20" max="20" value="7" step="1" style="width: 80px;"></label>
+                <span id="dirLightXVal">7</span>
+            </div>
+            <div style="margin-bottom: 8px;">
+                <label>主方向光 Y: <input type="range" id="dirLightY" min="-20" max="20" value="2" step="1" style="width: 80px;"></label>
+                <span id="dirLightYVal">2</span>
+            </div>
+            <div style="margin-bottom: 8px;">
+                <label>主方向光 Z: <input type="range" id="dirLightZ" min="-20" max="20" value="0" step="1" style="width: 80px;"></label>
+                <span id="dirLightZVal">0</span>
+            </div>
+            
+            <div style="margin-bottom: 8px;">
+                <label>顶部光源 Y: <input type="range" id="topLightY" min="10" max="50" value="30" step="1" style="width: 80px;"></label>
+                <span id="topLightYVal">30</span>
+            </div>
+            
+            <div style="margin-bottom: 8px;">
+                <label>补光 X: <input type="range" id="fillLightX" min="-20" max="20" value="-5" step="1" style="width: 80px;"></label>
+                <span id="fillLightXVal">-5</span>
+            </div>
+            <div style="margin-bottom: 8px;">
+                <label>补光 Y: <input type="range" id="fillLightY" min="-20" max="20" value="0" step="1" style="width: 80px;"></label>
+                <span id="fillLightYVal">0</span>
+            </div>
+            <div style="margin-bottom: 8px;">
+                <label>补光 Z: <input type="range" id="fillLightZ" min="-20" max="20" value="-8" step="1" style="width: 80px;"></label>
+                <span id="fillLightZVal">-8</span>
+            </div>
+        </div>
+        
+        <!-- 强度控制 -->
+        <div style="border-bottom: 1px solid #444; padding-bottom: 10px; margin-bottom: 10px;">
+            <h5 style="margin: 0 0 8px 0; color: #ccc;">强度控制</h5>
+            <div style="margin-bottom: 8px;">
+                <label>环境光: <input type="range" id="ambientIntensity" min="0" max="10" value="0.8" step="0.1" style="width: 80px;"></label>
+                <span id="ambientIntensityVal">0.8</span>
+            </div>
+            <div style="margin-bottom: 8px;">
+                <label>主方向光: <input type="range" id="dirLightIntensity" min="0" max="5" value="0.5" step="0.1" style="width: 80px;"></label>
+                <span id="dirLightIntensityVal">0.5</span>
+            </div>
+            <div style="margin-bottom: 8px;">
+                <label>顶部光源: <input type="range" id="topLightIntensity" min="0" max="5" value="1.4" step="0.1" style="width: 80px;"></label>
+                <span id="topLightIntensityVal">1.4</span>
+            </div>
+            <div style="margin-bottom: 8px;">
+                <label>补光: <input type="range" id="fillLightIntensity" min="0" max="3" value="0.2" step="0.1" style="width: 80px;"></label>
+                <span id="fillLightIntensityVal">0.2</span>
+            </div>
+            <div style="margin-bottom: 8px;">
+                <label>半球光: <input type="range" id="hemisphereIntensity" min="0" max="3" value="0.0" step="0.1" style="width: 80px;"></label>
+                <span id="hemisphereIntensityVal">0.0</span>
+            </div>
+        </div>
+        
+        <!-- 地面控制 -->
+        <div style="margin-bottom: 10px;">
+            <h5 style="margin: 0 0 8px 0; color: #ccc;">地面控制</h5>
+            <div style="margin-bottom: 8px;">
+                <label>地面高度: <input type="range" id="groundY" min="-10" max="10" value="-0.49" step="0.001" style="width: 80px;"></label>
+                <span id="groundYVal">-0.49</span>
+            </div>
+            <div style="margin-bottom: 8px;">
+                <label>地面大小: <input type="range" id="groundSize" min="20" max="200" value="100" step="10" style="width: 80px;"></label>
+                <span id="groundSizeVal">100</span>
+            </div>
+            <div style="margin-bottom: 8px;">
+                <label>地面颜色: <input type="color" id="groundColor" value="#333333" style="width: 40px; height: 20px;"></label>
+            </div>
+        </div>
+        
+        <button class="control-btn" onclick="viewer.resetLightPositions()" style="margin-right: 5px; width: 32%;">重置位置</button>
+        <button class="control-btn" onclick="viewer.resetLightIntensities()" style="margin-right: 5px; width: 32%;">重置强度</button>
+        <button class="control-btn" onclick="viewer.resetGround()" style="margin-right: 5px; width: 32%;">重置地面</button>
+        <button class="control-btn" onclick="viewer.loadHDR()" style="width: 32%;">导入HDR</button>
     </div>
     <canvas id="canvas"></canvas>
 
@@ -83,6 +176,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/RGBELoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/HDRCubeTextureLoader.js"></script>
 
     <script>
         /**
@@ -98,9 +193,29 @@
                 this.model = null;
                 this.loadingElement = document.getElementById('loading');
                 this.wireframeMode = false;
-                this.animationEnabled = true;
+                this.animationEnabled = false;
                 this.backgroundIndex = 0;
                 this.animationId = null;
+                
+                // 灯光引用
+                this.directionalLight = null;
+                this.topLight = null;
+                this.fillLight = null;
+                this.ambientLight = null;
+                this.hemisphereLight = null;
+                
+                // 地面引用
+                this.ground = null;
+                
+                // HDR环境贴图引用
+                this.hdrEnvironment = null;
+                
+                // 相机角度跟踪，用于优化阴影更新
+                this.lastAzimuthalAngle = 0;
+                this.lastPolarAngle = 0;
+                
+                // 移动端检测
+                this.isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
                 
                 this.init();
             }
@@ -115,7 +230,7 @@
 
                 // 创建相机
                 this.camera = new THREE.PerspectiveCamera(
-                    75, 
+                    45, 
                     window.innerWidth / window.innerHeight, 
                     0.1, 
                     1000
@@ -125,12 +240,20 @@
                 // 创建渲染器
                 this.renderer = new THREE.WebGLRenderer({ 
                     canvas: document.getElementById('canvas'),
-                    antialias: true 
+                    antialias: !this.isMobile, // 移动端关闭抗锯齿
+                    powerPreference: "high-performance",
+                    stencil: false,
+                    depth: true,
+                    alpha: true
                 });
                 this.renderer.setSize(window.innerWidth, window.innerHeight);
-                this.renderer.setPixelRatio(window.devicePixelRatio);
+                this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, this.isMobile ? 1.0 : 1.5));
                 this.renderer.shadowMap.enabled = true;
-                this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+                this.renderer.shadowMap.type = this.isMobile ? THREE.BasicShadowMap : THREE.PCFSoftShadowMap;
+                this.renderer.shadowMap.autoUpdate = false;
+                this.renderer.outputEncoding = THREE.sRGBEncoding;
+                this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+                this.renderer.toneMappingExposure = 1.0;
 
                 // 添加轨道控制器
                 this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
@@ -159,22 +282,21 @@
             setupBackground() {
                 const backgrounds = [
                     () => {
-                        // 黑多白少渐变
+                        // 黑灰色与黑色渐变背景
                         const canvas = document.createElement('canvas');
-                        canvas.width = 8192;
-                        canvas.height = 4096;
+                        canvas.width = 1024;
+                        canvas.height = 512;
                         const ctx = canvas.getContext('2d');
                         
                         const gradient = ctx.createRadialGradient(
                             canvas.width * 0.5, canvas.height * 0.5, 0,
                             canvas.width * 0.5, canvas.height * 0.5, canvas.width * 0.8
                         );
-                        gradient.addColorStop(0, '#ffffff');
-                        gradient.addColorStop(0.2, '#e0e0e0');
-                        gradient.addColorStop(0.4, '#a0a0a0');
-                        gradient.addColorStop(0.6, '#606060');
-                        gradient.addColorStop(0.8, '#202020');
-                        gradient.addColorStop(1, '#000000');
+                        gradient.addColorStop(0, '#404040'); // 黑灰色
+                        gradient.addColorStop(0.3, '#303030'); // 深灰色
+                        gradient.addColorStop(0.6, '#202020'); // 更深的灰色
+                        gradient.addColorStop(0.8, '#101010'); // 接近黑色
+                        gradient.addColorStop(1, '#000000'); // 纯黑色
                         
                         ctx.fillStyle = gradient;
                         ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -183,19 +305,19 @@
                         this.scene.background = texture;
                     },
                     () => {
-                        // 星空背景
+                        // 简化星空背景 - 减少星星数量
                         const canvas = document.createElement('canvas');
-                        canvas.width = 2048;
-                        canvas.height = 1024;
+                        canvas.width = 512;
+                        canvas.height = 256;
                         const ctx = canvas.getContext('2d');
                         
                         ctx.fillStyle = '#000011';
                         ctx.fillRect(0, 0, canvas.width, canvas.height);
                         
-                        for (let i = 0; i < 2000; i++) {
+                        for (let i = 0; i < 500; i++) {
                             const x = Math.random() * canvas.width;
                             const y = Math.random() * canvas.height;
-                            const size = Math.random() * 2;
+                            const size = Math.random() * 1.5;
                             const opacity = Math.random() * 0.8 + 0.2;
                             
                             ctx.beginPath();
@@ -221,31 +343,51 @@
              */
             setupLights() {
                 // 环境光
-                const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
-                this.scene.add(ambientLight);
+                this.ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+                this.scene.add(this.ambientLight);
 
                 // 方向光
-                const directionalLight = new THREE.DirectionalLight(0xffffff, 1.2);
-                directionalLight.position.set(10, 10, 5);
-                directionalLight.castShadow = true;
-                directionalLight.shadow.mapSize.width = 2048;
-                directionalLight.shadow.mapSize.height = 2048;
-                this.scene.add(directionalLight);
+                this.directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+                this.directionalLight.position.set(7, 2, 0);
+                this.directionalLight.castShadow = true;
+                this.directionalLight.shadow.mapSize.width = 1024;
+                this.directionalLight.shadow.mapSize.height = 1024;
+                this.directionalLight.shadow.camera.near = 0.1;
+                this.directionalLight.shadow.camera.far = 50;
+                this.directionalLight.shadow.bias = -0.0001;
+                this.directionalLight.shadow.normalBias = 0.02;
+                this.scene.add(this.directionalLight);
 
                 // 补光
-                const fillLight = new THREE.DirectionalLight(0xffffff, 0.6);
-                fillLight.position.set(-10, -10, -5);
-                this.scene.add(fillLight);
+                this.fillLight = new THREE.DirectionalLight(0xffffff, 0.2);
+                this.fillLight.position.set(-5, 0, -8);
+                this.scene.add(this.fillLight);
                 
                 // 顶部光源
-                const topLight = new THREE.DirectionalLight(0xffffff, 0.8);
-                topLight.position.set(0, 20, 0);
-                topLight.castShadow = true;
-                this.scene.add(topLight);
+                /**
+                 * 顶部光源，从模型正上方照射
+                 * @type {THREE.DirectionalLight}
+                 */
+                this.topLight = new THREE.DirectionalLight(0xffffff, 1.4);
+                this.topLight.position.set(0, 30, 0);
+                this.topLight.castShadow = true;
+                this.topLight.shadow.mapSize.width = 1024;
+                this.topLight.shadow.mapSize.height = 1024;
+                this.topLight.shadow.camera.near = 0.1;
+                this.topLight.shadow.camera.far = 50;
+                this.topLight.shadow.bias = -0.0001;
+                this.topLight.shadow.normalBias = 0.02;
+                this.scene.add(this.topLight);
                 
                 // 半球光
-                const hemisphereLight = new THREE.HemisphereLight(0x87ceeb, 0x8b4513, 0.6);
-                this.scene.add(hemisphereLight);
+                this.hemisphereLight = new THREE.HemisphereLight(0x87ceeb, 0x8b4513, 0.0);
+                this.scene.add(this.hemisphereLight);
+                
+                // 初始化灯光控制
+                this.initLightControls();
+                
+                // 添加透明地面
+                this.addTransparentGround();
             }
 
             /**
@@ -253,7 +395,7 @@
              */
             loadModel() {
                 const loader = new THREE.GLTFLoader();
-                const modelPath = 'model.glb';
+                const modelPath = 'Bucket chair.glb';
                 
                 loader.load(
                     modelPath,
@@ -275,11 +417,29 @@
                         this.controls.target.set(0, 0, 0);
                         this.controls.update();
                         
-                        // 为模型添加阴影
+                        // 为模型添加阴影和材质优化
                         this.model.traverse((child) => {
                             if (child.isMesh) {
                                 child.castShadow = true;
                                 child.receiveShadow = true;
+                                
+                                // 优化材质
+                                if (child.material) {
+                                    // 启用物理正确的光照
+                                    child.material.needsUpdate = true;
+                                    
+                                    // 如果材质支持，启用环境贴图
+                                    if (child.material.envMap) {
+                                        child.material.envMapIntensity = 1.0;
+                                    }
+                                    
+                                    // 优化渲染性能
+                                    if (child.material.map) {
+                                        child.material.map.generateMipmaps = true;
+                                        child.material.map.minFilter = THREE.LinearMipmapLinearFilter;
+                                        child.material.map.magFilter = THREE.LinearFilter;
+                                    }
+                                }
                             }
                         });
                         
@@ -292,7 +452,18 @@
                     },
                     (progress) => {
                         const percent = Math.round((progress.loaded / progress.total) * 100);
-                        this.loadingElement.textContent = `正在加载模型... ${percent}%`;
+                        const progressElement = document.getElementById('loading-progress');
+                        if (progressElement) {
+                            progressElement.textContent = `加载进度: ${percent}%`;
+                        }
+                        
+                        // 显示加载速度
+                        const speed = (progress.loaded / 1024 / 1024).toFixed(1);
+                        const total = (progress.total / 1024 / 1024).toFixed(1);
+                        const tipsElement = document.getElementById('loading-tips');
+                        if (tipsElement) {
+                            tipsElement.textContent = `已加载: ${speed}MB / ${total}MB`;
+                        }
                     },
                     (error) => {
                         console.error('模型加载失败:', error);
@@ -314,6 +485,16 @@
                 // 模型动画
                 if (this.animationEnabled && this.model) {
                     this.model.rotation.y += 0.005;
+                }
+                
+                // 智能阴影更新：只在相机移动时更新阴影
+                if (this.controls.enabled && (this.controls.getAzimuthalAngle() !== this.lastAzimuthalAngle || 
+                    this.controls.getPolarAngle() !== this.lastPolarAngle)) {
+                    this.renderer.shadowMap.autoUpdate = true;
+                    this.lastAzimuthalAngle = this.controls.getAzimuthalAngle();
+                    this.lastPolarAngle = this.controls.getPolarAngle();
+                } else {
+                    this.renderer.shadowMap.autoUpdate = false;
                 }
                 
                 // 渲染场景
@@ -373,6 +554,345 @@
             changeBackground() {
                 this.backgroundIndex = (this.backgroundIndex + 1) % 3;
                 this.setupBackground();
+            }
+
+            /**
+             * 初始化灯光控制
+             */
+            initLightControls() {
+                // 主方向光位置控制
+                const dirLightX = document.getElementById('dirLightX');
+                const dirLightY = document.getElementById('dirLightY');
+                const dirLightZ = document.getElementById('dirLightZ');
+                
+                dirLightX.addEventListener('input', (e) => {
+                    this.directionalLight.position.x = parseFloat(e.target.value);
+                    document.getElementById('dirLightXVal').textContent = e.target.value;
+                });
+                
+                dirLightY.addEventListener('input', (e) => {
+                    this.directionalLight.position.y = parseFloat(e.target.value);
+                    document.getElementById('dirLightYVal').textContent = e.target.value;
+                });
+                
+                dirLightZ.addEventListener('input', (e) => {
+                    this.directionalLight.position.z = parseFloat(e.target.value);
+                    document.getElementById('dirLightZVal').textContent = e.target.value;
+                });
+                
+                // 顶部光源位置控制
+                const topLightY = document.getElementById('topLightY');
+                topLightY.addEventListener('input', (e) => {
+                    this.topLight.position.y = parseFloat(e.target.value);
+                    document.getElementById('topLightYVal').textContent = e.target.value;
+                });
+                
+                // 补光位置控制
+                const fillLightX = document.getElementById('fillLightX');
+                const fillLightY = document.getElementById('fillLightY');
+                const fillLightZ = document.getElementById('fillLightZ');
+                
+                fillLightX.addEventListener('input', (e) => {
+                    this.fillLight.position.x = parseFloat(e.target.value);
+                    document.getElementById('fillLightXVal').textContent = e.target.value;
+                });
+                
+                fillLightY.addEventListener('input', (e) => {
+                    this.fillLight.position.y = parseFloat(e.target.value);
+                    document.getElementById('fillLightYVal').textContent = e.target.value;
+                });
+                
+                fillLightZ.addEventListener('input', (e) => {
+                    this.fillLight.position.z = parseFloat(e.target.value);
+                    document.getElementById('fillLightZVal').textContent = e.target.value;
+                });
+                
+                // 灯光强度控制
+                const ambientIntensity = document.getElementById('ambientIntensity');
+                const dirLightIntensity = document.getElementById('dirLightIntensity');
+                const topLightIntensity = document.getElementById('topLightIntensity');
+                const fillLightIntensity = document.getElementById('fillLightIntensity');
+                const hemisphereIntensity = document.getElementById('hemisphereIntensity');
+                
+                ambientIntensity.addEventListener('input', (e) => {
+                    this.ambientLight.intensity = parseFloat(e.target.value);
+                    document.getElementById('ambientIntensityVal').textContent = e.target.value;
+                });
+                
+                dirLightIntensity.addEventListener('input', (e) => {
+                    this.directionalLight.intensity = parseFloat(e.target.value);
+                    document.getElementById('dirLightIntensityVal').textContent = e.target.value;
+                });
+                
+                topLightIntensity.addEventListener('input', (e) => {
+                    this.topLight.intensity = parseFloat(e.target.value);
+                    document.getElementById('topLightIntensityVal').textContent = e.target.value;
+                });
+                
+                fillLightIntensity.addEventListener('input', (e) => {
+                    this.fillLight.intensity = parseFloat(e.target.value);
+                    document.getElementById('fillLightIntensityVal').textContent = e.target.value;
+                });
+                
+                hemisphereIntensity.addEventListener('input', (e) => {
+                    this.hemisphereLight.intensity = parseFloat(e.target.value);
+                    document.getElementById('hemisphereIntensityVal').textContent = e.target.value;
+                });
+                
+                // 地面控制
+                const groundY = document.getElementById('groundY');
+                const groundSize = document.getElementById('groundSize');
+                const groundColor = document.getElementById('groundColor');
+                
+                groundY.addEventListener('input', (e) => {
+                    if (this.ground) {
+                        this.ground.position.y = parseFloat(e.target.value);
+                        document.getElementById('groundYVal').textContent = e.target.value;
+                    }
+                });
+                
+                groundSize.addEventListener('input', (e) => {
+                    if (this.ground) {
+                        const size = parseFloat(e.target.value);
+                        // 重新创建几何体以改变大小
+                        this.ground.geometry.dispose();
+                        this.ground.geometry = new THREE.PlaneGeometry(size, size);
+                        document.getElementById('groundSizeVal').textContent = e.target.value;
+                    }
+                });
+                
+                groundColor.addEventListener('input', (e) => {
+                    if (this.ground) {
+                        this.ground.material.color.setHex(parseInt(e.target.value.replace('#', ''), 16));
+                    }
+                });
+            }
+
+            /**
+             * 切换灯光控制面板
+             */
+            toggleLightControls() {
+                const lightControls = document.getElementById('light-controls');
+                lightControls.style.display = lightControls.style.display === 'none' ? 'block' : 'none';
+            }
+
+            /**
+             * 重置灯光位置
+             */
+            resetLightPositions() {
+                // 重置主方向光
+                this.directionalLight.position.set(7, 2, 0);
+                document.getElementById('dirLightX').value = 7;
+                document.getElementById('dirLightY').value = 2;
+                document.getElementById('dirLightZ').value = 0;
+                document.getElementById('dirLightXVal').textContent = '7';
+                document.getElementById('dirLightYVal').textContent = '2';
+                document.getElementById('dirLightZVal').textContent = '0';
+                
+                // 重置顶部光源
+                this.topLight.position.set(0, 30, 0);
+                document.getElementById('topLightY').value = 30;
+                document.getElementById('topLightYVal').textContent = '30';
+                
+                // 重置补光
+                this.fillLight.position.set(-5, 0, -8);
+                document.getElementById('fillLightX').value = -5;
+                document.getElementById('fillLightY').value = 0;
+                document.getElementById('fillLightZ').value = -8;
+                document.getElementById('fillLightXVal').textContent = '-5';
+                document.getElementById('fillLightYVal').textContent = '0';
+                document.getElementById('fillLightZVal').textContent = '-8';
+            }
+
+            /**
+             * 重置灯光强度
+             */
+            resetLightIntensities() {
+                // 重置环境光强度
+                this.ambientLight.intensity = 0.8;
+                document.getElementById('ambientIntensity').value = 0.8;
+                document.getElementById('ambientIntensityVal').textContent = '0.8';
+                
+                // 重置主方向光强度
+                this.directionalLight.intensity = 0.5;
+                document.getElementById('dirLightIntensity').value = 0.5;
+                document.getElementById('dirLightIntensityVal').textContent = '0.5';
+                
+                // 重置顶部光源强度
+                this.topLight.intensity = 1.4;
+                document.getElementById('topLightIntensity').value = 1.4;
+                document.getElementById('topLightIntensityVal').textContent = '1.4';
+                
+                // 重置补光强度
+                this.fillLight.intensity = 0.2;
+                document.getElementById('fillLightIntensity').value = 0.2;
+                document.getElementById('fillLightIntensityVal').textContent = '0.2';
+                
+                // 重置半球光强度
+                this.hemisphereLight.intensity = 0.0;
+                document.getElementById('hemisphereIntensity').value = 0.0;
+                document.getElementById('hemisphereIntensityVal').textContent = '0.0';
+            }
+
+            /**
+             * 添加地面
+             * @description 在模型底部添加地面，显示阴影效果
+             */
+            addTransparentGround() {
+                // 创建地面材质
+                /**
+                 * 地面材质，融入背景但保持阴影可见
+                 * @type {THREE.MeshBasicMaterial}
+                 */
+                const groundMaterial = new THREE.MeshBasicMaterial({
+                    color: 0x000000, // 黑色，与背景融合
+                    transparent: true,
+                    opacity: 0.0, // 完全透明，但能接收阴影
+                    side: THREE.DoubleSide
+                });
+                
+                // 创建地面几何体
+                /**
+                 * 地面几何体，足够大的平面
+                 * @type {THREE.PlaneGeometry}
+                 */
+                const groundGeometry = new THREE.PlaneGeometry(100, 100);
+                
+                // 创建地面网格
+                /**
+                 * 透明地面网格，融入背景但接收阴影
+                 * @type {THREE.Mesh}
+                 */
+                const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+                
+                // 设置地面位置和旋转
+                ground.rotation.x = -Math.PI / 2; // 水平放置
+                ground.position.y = -0.49; // 位于模型底部
+                ground.receiveShadow = true; // 接收阴影
+                ground.castShadow = false; // 不投射阴影
+                
+                // 添加到场景
+                this.scene.add(ground);
+                
+                // 保存地面引用，以便后续调整
+                this.ground = ground;
+            }
+
+            /**
+             * 重置地面设置
+             */
+            resetGround() {
+                if (this.ground) {
+                    // 重置位置
+                    this.ground.position.y = -0.49;
+                    document.getElementById('groundY').value = -0.49;
+                    document.getElementById('groundYVal').textContent = '-0.49';
+                    
+                    // 重置大小
+                    this.ground.geometry.dispose();
+                    this.ground.geometry = new THREE.PlaneGeometry(100, 100);
+                    document.getElementById('groundSize').value = 100;
+                    document.getElementById('groundSizeVal').textContent = '100';
+                    
+                    // 重置颜色
+                    this.ground.material.color.setHex(0x333333);
+                    document.getElementById('groundColor').value = '#333333';
+                }
+            }
+
+            /**
+             * 加载HDR环境贴图
+             * @description 允许用户上传HDR文件作为环境贴图
+             */
+            loadHDR() {
+                // 创建文件输入元素
+                const fileInput = document.createElement('input');
+                fileInput.type = 'file';
+                fileInput.accept = '.hdr,.exr,.png,.jpg,.jpeg';
+                fileInput.style.display = 'none';
+                
+                fileInput.addEventListener('change', (event) => {
+                    const file = event.target.files[0];
+                    if (file) {
+                        this.processHDRFile(file);
+                    }
+                });
+                
+                // 触发文件选择
+                document.body.appendChild(fileInput);
+                fileInput.click();
+                document.body.removeChild(fileInput);
+            }
+
+            /**
+             * 处理HDR文件
+             * @param {File} file - 上传的文件
+             */
+            processHDRFile(file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const url = event.target.result;
+                    // 根据文件类型选择加载器
+                    if (file.name.toLowerCase().endsWith('.hdr')) {
+                        this.loadHDRFile(url);
+                    } else if (file.name.toLowerCase().endsWith('.exr')) {
+                        this.loadEXRFile(url);
+                    } else {
+                        this.loadImageFile(url);
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+
+            /**
+             * 加载HDR文件
+             * @param {string} url - 文件URL
+             */
+            loadHDRFile(url) {
+                const loader = new THREE.RGBELoader();
+                loader.setPath('');
+                loader.load(url, (texture) => {
+                    texture.mapping = THREE.EquirectangularReflectionMapping;
+                    texture.encoding = THREE.RGBEEncoding;
+                    this.scene.environment = texture;
+                    this.scene.background = texture;
+                    this.hdrEnvironment = texture;
+                    console.log('HDR环境贴图加载成功');
+                }, (progress) => {
+                    console.log('HDR加载进度:', (progress.loaded / progress.total * 100) + '%');
+                }, (error) => {
+                    console.error('HDR加载失败:', error);
+                    alert('HDR文件加载失败，请检查文件格式');
+                });
+            }
+
+            /**
+             * 加载EXR文件
+             * @param {string} url - 文件URL
+             */
+            loadEXRFile(url) {
+                // 对于EXR文件，使用类似的处理方式
+                this.loadHDRFile(url);
+            }
+
+            /**
+             * 加载普通图片文件
+             * @param {string} url - 文件URL
+             */
+            loadImageFile(url) {
+                const loader = new THREE.TextureLoader();
+                loader.load(url, (texture) => {
+                    texture.mapping = THREE.EquirectangularReflectionMapping;
+                    this.scene.environment = texture;
+                    this.scene.background = texture;
+                    this.hdrEnvironment = texture;
+                    console.log('图片环境贴图加载成功');
+                }, (progress) => {
+                    console.log('图片加载进度:', (progress.loaded / progress.total * 100) + '%');
+                }, (error) => {
+                    console.error('图片加载失败:', error);
+                    alert('图片文件加载失败，请检查文件格式');
+                });
             }
         }
 
